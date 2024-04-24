@@ -1,3 +1,4 @@
+-- change the valid email value when email changed
 DELIMITER //
 
 CREATE TRIGGER email_trigger
