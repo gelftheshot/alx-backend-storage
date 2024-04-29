@@ -1,19 +1,20 @@
+#!/usr/bin/env python3
+"""Script to analyze nginx log file."""
 from pymongo import MongoClient
 
 if __name__ == "__main__":
     client = MongoClient('mongodb://127.0.0.1:27017')
     nginx_coll = client.logs.nginx
-    methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
-    log_count = nginx_coll.count_documents({})
-    print(f"{log_count} logs")
+    methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+    print(f"{nginx_coll.count_documents({})} logs")
     print("Methods:")
 
     for method in methods:
-        method_query = {'method': method}
-        count = nginx_coll.count_documents(method_query)
+        count = nginx_coll.count_documents({'method': method})
         print(f"\tmethod {method}: {count}")
 
-    status_query = {'method': 'GET', 'path': '/status'}
-    status_check = nginx_coll.count_documents(status_query)
+    status_check = nginx_coll.count_documents(
+        {'method': 'GET', 'path': '/status'}
+    )
     print(f"{status_check} status check")
