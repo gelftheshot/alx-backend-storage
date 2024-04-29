@@ -4,6 +4,7 @@ import pymongo
 
 
 def top_students(mongo_collection):
+    """ finding and adding and returnign avarnge """
     for doc in mongo_collection.find():
         total = 0
         leng = len(doc['topics'])
