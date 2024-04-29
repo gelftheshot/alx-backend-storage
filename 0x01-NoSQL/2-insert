@@ -1,2 +1,2 @@
 // mongodb script used to inseart collection in to the database
-db.school.insertOne({name: "Holberton school"})
+db.school.insert({name: "Holberton school"})
