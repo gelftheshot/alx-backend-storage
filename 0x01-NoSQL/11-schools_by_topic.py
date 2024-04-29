@@ -6,4 +6,4 @@
 def schools_by_topic(mongo_collection, topic):
     """Returns documents with a specific topic as a list"""
     cursor = mongo_collection.find({'topics': topic})
-    return list(cursor)
+    return ([i for i in cursor])
