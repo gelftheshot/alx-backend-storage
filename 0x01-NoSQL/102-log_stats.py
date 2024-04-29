@@ -27,4 +27,4 @@ if __name__ == "__main__":
 
     print("IPs:")
     for doc in nginx_coll.aggregate(pipeline):
-        print(f"\t{doc['_id']} {doc['count']}")
+        print(f"\t{doc['_id']}: {doc['count']}")
