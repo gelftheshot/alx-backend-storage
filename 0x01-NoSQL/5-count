@@ -1,2 +1,2 @@
 // counting the number of documents in the collectin
-db.school.countDocuments()
+db.school.count()
