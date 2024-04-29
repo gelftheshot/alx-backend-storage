@@ -10,5 +10,8 @@ def top_students(mongo_collection):
         for sub in doc['topics']:
             total += sub['score']
         avr = total / leng
-        mongo_collection.update_one({'_id': doc['_id'] }, {'$set': {'averageScore': avr}})
+    mongo_collection.update_many(
+        {'_id': doc['_id']},
+        {'$set': {'averageScore': avr}}
+    )
     return mongo_collection.find().sort('averageScore', pymongo.DESCENDING)
