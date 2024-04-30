@@ -20,11 +20,11 @@ def counturl(func: Callable) -> Callable:
         """
         Wrapper function to cache the content of a URL.
         """
-        r.incr(f"count:{url}")
+        r.incr(f"{url}")
         if r.get(f"cached:{url}"):
-            return r.get(f"cached:{url}").decode('utf-8')
+            return r.get(f"{url}").decode('utf-8')
         text = func(url)
-        r.setex(f"cached:{url}", 10, text)
+        r.setex(f"{url}", 10, text)
         return text
 
     return wrapper
