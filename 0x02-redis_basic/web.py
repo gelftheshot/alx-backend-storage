@@ -1,39 +1,38 @@
 #!/usr/bin/env python3
-"""
-This module provides functionality to cache web pages using Redis.
-"""
-
+'''A module with tools for request caching and tracking.
+'''
 import redis
 import requests
 from functools import wraps
 from typing import Callable
 
-r = redis.Redis()
+
+redis_store = redis.Redis()
+'''The module-level Redis instance.
+'''
 
 
-def counturl(func: Callable) -> Callable:
-    """
-    Decorator to count the number of times a URL is accessed.
-    """
-    @wraps(func)
-    def wrapper(url: str) -> str:
-        """
-        Wrapper function to cache the content of a URL.
-        """
-        r.incr(f"count:{url}")
-        if r.get(f"cached:{url}"):
-            return r.get(f"cached:{url}").decode('utf-8')
-        text = func(url)
+def data_cacher(method: Callable) -> Callable:
+    '''Caches the output of fetched data.
+    '''
+    @wraps(method)
+    def invoker(url) -> str:
+        '''The wrapper function for caching the output.
+        '''
+        redis_store.incr(f'count:{url}')
+        result = redis_store.get(f'result:{url}')
+        if result:
+            return result.decode('utf-8')
+        result = method(url)
         redis_store.set(f'count:{url}', 0)
-        redis_store.setex(f'{url}', 10, text)
-        return text
+        redis_store.setex(f'result:{url}', 10, result)
+        return result
+    return invoker
 
-    return wrapper
 
-
-@counturl
+@data_cacher
 def get_page(url: str) -> str:
-    """
-    Retrieve the HTML content of the URL.
-    """
+    '''Returns the content of a URL after caching the request's response,
+    and tracking the request.
+    '''
     return requests.get(url).text
