@@ -24,7 +24,8 @@ def counturl(func: Callable) -> Callable:
         if r.get(f"cached:{url}"):
             return r.get(f"cached:{url}").decode('utf-8')
         text = func(url)
-        r.setex(f"cached:{url}", 10, text)
+        redis_store.set(f'count:{url}', 0)
+        redis_store.setex(f'{url}', 10, text)
         return text
 
     return wrapper
