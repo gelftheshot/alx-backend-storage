@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+This module provides functionality to cache web pages using Redis.
+"""
+
 import redis
 import requests
 from functools import wraps
@@ -7,9 +12,14 @@ r = redis.Redis()
 
 
 def counturl(func: Callable) -> Callable:
-
+    """
+    Decorator to count the number of times a URL is accessed.
+    """
     @wraps(func)
-    def wrapper(url):
+    def wrapper(url: str) -> str:
+        """
+        Wrapper function to cache the content of a URL.
+        """
         r.incr(f"count:{url}")
         if r.exists(f"cached:{url}"):
             return r.get(f"cached:{url}").decode('utf-8')
@@ -22,5 +32,7 @@ def counturl(func: Callable) -> Callable:
 
 @counturl
 def get_page(url: str) -> str:
-    """Retrieve the HTML content of the URL."""
+    """
+    Retrieve the HTML content of the URL.
+    """
     return requests.get(url).text
