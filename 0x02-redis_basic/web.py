@@ -23,7 +23,7 @@ def counturl(func: Callable) -> Callable:
         if r.get(f"cached:{url}"):
             return r.get(f"{url}").decode('utf-8')
         text = func(url)
-        r.setex(f"{url}", 10, text)
+        r.set(f'{url}', response, 10)
         return text
 
     return wrapper
