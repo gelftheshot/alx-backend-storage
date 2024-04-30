@@ -8,8 +8,6 @@ import requests
 from functools import wraps
 from typing import Callable
 
-r = redis.Redis()
-
 
 def counturl(func: Callable) -> Callable:
     """
@@ -20,6 +18,7 @@ def counturl(func: Callable) -> Callable:
         """
         Wrapper function to cache the content of a URL.
         """
+        r = redis.Redis()
         r.incr(f"{url}")
         if r.get(f"cached:{url}"):
             return r.get(f"{url}").decode('utf-8')
