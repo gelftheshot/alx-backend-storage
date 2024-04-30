@@ -11,26 +11,27 @@ from typing import Callable
 r = redis.Redis()
 
 
-def counturl(func: Callable) -> Callable:
+def count_requests(method: Callable) -> Callable:
+    """ Counting with decorators how many times a request
+        has been made
     """
-    Decorator to count the number of times a URL is accessed.
-    """
-    @wraps(func)
-    def wrapper(url: str) -> str:
-        """
-        Wrapper function to cache the content of a URL.
-        """
-        r.incr(f"count:{url}")
-        if r.exists(f"cached:{url}"):
-            return r.get(f"cached:{url}").decode('utf-8')
-        text = func(url)
-        r.setex(f"cached:{url}", 10, text)
-        return text
+
+    @wraps(method)
+    def wrapper(url):
+        """ Wrapper for decorator functionality """
+        rd.incr(f"count:{url}")
+        cached_html = rd.get(f"cached:{url}")
+        if cached_html:
+            return cached_html.decode('utf-8')
+
+        html = method(url)
+        rd.setex(f"cached:{url}", 10, html)
+        return html
 
     return wrapper
 
 
-@counturl
+@count_requests
 def get_page(url: str) -> str:
     """
     Retrieve the HTML content of the URL.
