@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-This module provides a Cache class for storing data using Redis.
+Thle provides a Cache class for storing data using Redis.
 """
 
 import redis
